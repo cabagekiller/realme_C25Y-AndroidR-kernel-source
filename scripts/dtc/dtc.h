@@ -301,7 +301,7 @@ struct dt_info *dt_from_source(const char *f);
 
 /* YAML source */
 
-void dt_to_yaml(FILE *f, struct dt_info *dti);
+// void dt_to_yaml(FILE *f, struct dt_info *dti);
 
 /* FS trees */
 
