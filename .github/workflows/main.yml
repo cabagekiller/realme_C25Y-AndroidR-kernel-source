@@ -198,6 +198,12 @@ jobs:
           EOF
           echo "--- Patching and Configuration Complete ---"
 
+      - name: Patch dtc Makefile to link libyaml
+        run: |
+          if ! grep -q 'HOSTLDLIBS_dtc += -lyaml' scripts/dtc/Makefile; then
+            echo 'HOSTLDLIBS_dtc += -lyaml' >> scripts/dtc/Makefile
+          fi
+
       - name: Build Kernel
         id: build
         working-directory: ${{ steps.clone.outputs.kernel-folder }}
