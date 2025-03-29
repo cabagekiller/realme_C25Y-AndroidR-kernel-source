@@ -198,14 +198,17 @@ jobs:
           EOF
           echo "--- Patching and Configuration Complete ---"
 
-      - name: Patch dtc Makefile to link libyaml
+      - name: Patch DTC Makefile to link with libyaml
         run: |
           MAKEFILE="$KERNEL_DIR/scripts/dtc/Makefile"
-          if ! grep -q 'HOSTLDLIBS_dtc += -lyaml' "$MAKEFILE"; then
+          if grep -q 'HOSTLDLIBS_dtc' "$MAKEFILE"; then
+            sed -i '/HOSTLDLIBS_dtc/ s/$/ -lyaml/' "$MAKEFILE"
+          else
             echo 'HOSTLDLIBS_dtc += -lyaml' >> "$MAKEFILE"
           fi
         env:
           KERNEL_DIR: ${{ env.KERNEL_DIR }}
+
 
       - name: Build Kernel
         id: build
