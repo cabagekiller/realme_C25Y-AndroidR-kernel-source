@@ -86,7 +86,7 @@ jobs:
             bc bison build-essential ccache coreutils file flex \
             g++ gcc git libelf-dev libfl-dev libncurses6 libssl-dev \
             llvm-dev make ninja-build python3 python3-dev python3-pip \
-            python3-setuptools rsync unzip wget zip -qq
+            python3-setuptools rsync unzip wget libyaml-dev zip -qq
 
       - name: Cache Clang Toolchain
         uses: actions/cache@v4
