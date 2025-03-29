@@ -200,11 +200,22 @@ jobs:
 
       - name: Disable YAML output support in DTC
         run: |
-          # Disable yamltree.o to avoid needing libyaml
           echo "Disabling YAML output support in DTC..."
-          sed -i 's/yamltree.o//g' "$KERNEL_DIR/scripts/dtc/Makefile"
-          # Confirm the change was made
-          cat "$KERNEL_DIR/scripts/dtc/Makefile" | grep "yamltree.o"
+  
+          # Ensure the Makefile exists
+          if [ -f "$KERNEL_DIR/scripts/dtc/Makefile" ]; then
+            # Disable yamltree.o by removing it from the Makefile and avoiding libyaml
+            sed -i '/yamltree.o/d' "$KERNEL_DIR/scripts/dtc/Makefile"  # Remove yamltree.o from dtc-objs
+            sed -i '/HOSTLDLIBS_dtc.*-lyaml/d' "$KERNEL_DIR/scripts/dtc/Makefile"  # Remove -lyaml from HOSTLDLIBS_dtc
+            echo "yamltree.o and libyaml have been disabled in the Makefile."
+            # Confirm the changes were made
+            cat "$KERNEL_DIR/scripts/dtc/Makefile" | grep "yamltree.o" || echo "yamltree.o not found."
+            cat "$KERNEL_DIR/scripts/dtc/Makefile" | grep "HOSTLDLIBS_dtc" || echo "No link to libyaml."
+          else
+            echo "Makefile not found at $KERNEL_DIR/scripts/dtc/Makefile. Skipping YAML disable step."
+          fi
+
+
 
       - name: Build Kernel
         id: build
