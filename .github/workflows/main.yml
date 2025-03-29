@@ -100,7 +100,7 @@ jobs:
         run: |
           echo "Downloading and extracting clang..."
           mkdir -p "${{ env.CLANG_DIR }}"
-          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O clang.tar.gz
+          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/0e9e7035bf8ad42437c6156e5950eab13655b26c/clang-r383902b.tar.gz -O clang.tar.gz
           tar -xf clang.tar.gz -C "${{ env.CLANG_DIR }}"
           rm clang.tar.gz
           echo "Clang downloaded and extracted."
