@@ -222,6 +222,19 @@ jobs:
           # Look for all instances of dt_to_yaml and comment them out or remove them
           find $KERNEL_DIR -type f -exec sed -i 's/dt_to_yaml//g' {} \;  # This will remove or comment out `dt_to_yaml` usage
 
+      - name: Apply patch for ARM64 register issues
+        run: |
+          # Fix 'sp' register issue by removing 'register' keyword in 'current_stack_pointer' declaration
+          sed -i 's/register unsigned long current_stack_pointer asm ("sp");/unsigned long current_stack_pointer;/' \
+            $KERNEL_DIR/arch/arm64/include/asm/stack_pointer.h
+
+          # Fix '65536' out of range for 'I' constraint by modifying TICKET_SHIFT usage
+          sed -i 's/1 << TICKET_SHIFT/1 << min(TICKET_SHIFT, 12)/' \
+            $KERNEL_DIR/arch/arm64/include/asm/spinlock.h
+
+          # Confirm changes
+          echo "Applied patch to stack_pointer.h and spinlock.h"
+
 
       - name: Build Kernel
         id: build
