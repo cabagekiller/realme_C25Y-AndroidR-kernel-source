@@ -200,9 +200,12 @@ jobs:
 
       - name: Patch dtc Makefile to link libyaml
         run: |
-          if ! grep -q 'HOSTLDLIBS_dtc += -lyaml' scripts/dtc/Makefile; then
-            echo 'HOSTLDLIBS_dtc += -lyaml' >> scripts/dtc/Makefile
+          MAKEFILE="$KERNEL_DIR/scripts/dtc/Makefile"
+          if ! grep -q 'HOSTLDLIBS_dtc += -lyaml' "$MAKEFILE"; then
+            echo 'HOSTLDLIBS_dtc += -lyaml' >> "$MAKEFILE"
           fi
+        env:
+          KERNEL_DIR: ${{ env.KERNEL_DIR }}
 
       - name: Build Kernel
         id: build
