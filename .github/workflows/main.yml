@@ -198,17 +198,13 @@ jobs:
           EOF
           echo "--- Patching and Configuration Complete ---"
 
-      - name: Patch DTC Makefile to link with libyaml
+      - name: Disable YAML output support in DTC
         run: |
-          MAKEFILE="$KERNEL_DIR/scripts/dtc/Makefile"
-          if grep -q 'HOSTLDLIBS_dtc' "$MAKEFILE"; then
-            sed -i '/HOSTLDLIBS_dtc/ s/$/ -lyaml/' "$MAKEFILE"
-          else
-            echo 'HOSTLDLIBS_dtc += -lyaml' >> "$MAKEFILE"
-          fi
-        env:
-          KERNEL_DIR: ${{ env.KERNEL_DIR }}
-
+          # Disable yamltree.o to avoid needing libyaml
+          echo "Disabling YAML output support in DTC..."
+          sed -i 's/yamltree.o//g' "$KERNEL_DIR/scripts/dtc/Makefile"
+          # Confirm the change was made
+          cat "$KERNEL_DIR/scripts/dtc/Makefile" | grep "yamltree.o"
 
       - name: Build Kernel
         id: build
