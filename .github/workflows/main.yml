@@ -215,6 +215,12 @@ jobs:
             echo "Makefile not found at $KERNEL_DIR/scripts/dtc/Makefile. Skipping YAML disable step."
           fi
 
+      - name: Remove YAML References from Source Code
+        run: |
+          echo "Removing YAML references from source code..."
+          
+          # Look for all instances of dt_to_yaml and comment them out or remove them
+          find $KERNEL_DIR -type f -exec sed -i 's/dt_to_yaml//g' {} \;  # This will remove or comment out `dt_to_yaml` usage
 
 
       - name: Build Kernel
